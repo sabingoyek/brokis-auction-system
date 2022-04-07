@@ -1,7 +1,9 @@
-from typing import Optional
+from typing import Optional, List, TYPE_CHECKING
+
 
 from pydantic import BaseModel, EmailStr
 
+from .auction import Auction
 
 # Shared properties
 class UserBase(BaseModel):
@@ -22,8 +24,11 @@ class UserUpdate(UserBase):
     password: Optional[str] = None
 
 
+# Properties shared by models stored in DB
 class UserInDBBase(UserBase):
-    id: Optional[int] = None
+    id: int
+    email: str
+    is_active: Optional[bool]
 
     class Config:
         orm_mode = True
@@ -31,7 +36,7 @@ class UserInDBBase(UserBase):
 
 # Additional properties to return via API
 class User(UserInDBBase):
-    pass
+    auctions: List[Auction] = []
 
 
 # Additional properties stored in DB
