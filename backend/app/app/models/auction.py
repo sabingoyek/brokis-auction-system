@@ -16,8 +16,7 @@ class Auction(Base):
     title = Column(String, index=True)
     description = Column(String, index=True)
     owner_id = Column(Integer, ForeignKey("user.id"))
-    is_published = Column(Boolean, default=False)
-    is_active = Column(Boolean, default=False)
+    status = Column(String, default="draft")
     cycle_duration = Column(Integer, default=5)     # duration in minutes
     max_cycle_number = Column(Integer, default=3)
     creation_date = Column(String, default=datetime.now())

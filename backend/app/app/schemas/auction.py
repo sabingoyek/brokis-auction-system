@@ -33,8 +33,7 @@ class AuctionInDBBase(AuctionBase):
     end_date: datetime = None
     cycle_duration: int = 5 # in minutes
     max_cycle_number: int = 3 
-    is_published: bool = False
-    is_active: bool = False
+    status: str = "draft"
 
     class Config:
         orm_mode = True
