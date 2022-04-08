@@ -42,7 +42,15 @@ class CRUDAuction(CRUDBase[Auction, AuctionCreate, AuctionUpdate]):
             .all()
         )
 
-        
+    def get_auction_status(
+        self, db: Session, *, auction_id: int
+    ) -> str:
+        return (
+            db.query(self.model)
+            .filter(Auction.id == auction_id)
+            .with_entities(Auction.status)
+            .first()
+        )
 
 
 auction = CRUDAuction(Auction)

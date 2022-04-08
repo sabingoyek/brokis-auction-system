@@ -151,3 +151,47 @@ def update_user(
         )
     user = crud.user.update(db, db_obj=user, obj_in=user_in)
     return user
+
+
+@router.get("/me/auctions", response_model=List[schemas.Auction])
+def read_user_me_auction(
+    db: Session = Depends(deps.get_db),
+    skip: int = 0,
+    limit: int = 100,
+    current_user: models.User = Depends(deps.get_current_active_user),
+) -> Any:
+    """
+    Get current user's auction.
+    """
+    auctions = crud.auction.get_multi_by_owner(db=db, owner_id=current_user.id, skip=skip, limit=limit)
+    return auctions
+
+
+@router.get("/me/items", response_model=List[schemas.Item])
+def read_user_me_items(
+    db: Session = Depends(deps.get_db),
+    skip: int = 0,
+    limit: int = 100,
+    current_user: models.User = Depends(deps.get_current_active_user),
+) -> Any:
+    """
+    Get current user's items.
+    """
+    items = crud.item.get_multi_by_owner(
+        db=db, owner_id=current_user.id, skip=skip, limit=limit)
+    return items
+
+
+@router.get("/me/bids", response_model=List[schemas.Bid])
+def read_user_me_bids(
+    db: Session = Depends(deps.get_db),
+    skip: int = 0,
+    limit: int = 100,
+    current_user: models.User = Depends(deps.get_current_active_user),
+) -> Any:
+    """
+    Get current user's bids.
+    """
+    bids = crud.bid.get_multi_by_owner(
+        db=db, bidder_id=current_user.id, skip=skip, limit=limit)
+    return bids

@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.crud.base import CRUDBase
 from app.models.item import Item
+from app.models.bid import Bid
 from app.schemas.item import ItemCreate, ItemUpdate
 
 
@@ -50,7 +51,26 @@ class CRUDItem(CRUDBase[Item, ItemCreate, ItemUpdate]):
             .limit(limit)
             .all()
         )
-
+    
+    def get_item_highest_bid(
+        db: Session, item_id: int
+    ) -> List[Item]:
+        return(
+            db.query(Bid)
+            .filter(Bid.item_id == item_id)
+            .order_by(Bid.price.desc(), Bid.bid_date.asc())
+            .first()
+        )
+    
+    def get_item_start_price(
+        self, db: Session, *, item_id: int
+    ) -> str:
+        return (
+            db.query(Item)
+            .filter(Item.id == item_id)
+            .with_entities(Item.start_price)
+            .first()
+        )
 
 
 

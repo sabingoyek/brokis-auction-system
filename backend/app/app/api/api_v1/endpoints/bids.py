@@ -21,13 +21,14 @@ def read_bids(
     """
     if crud.user.is_superuser(current_user):
         bids = crud.bid.get_multi(db, skip=skip, limit=limit)
+    
     else:
         bids = crud.bid.get_multi_by_owner(
-            db=db, owner_id=current_user.id, skip=skip, limit=limit
+            db=db, bidder_id=current_user.id, skip=skip, limit=limit
         )
     return bids
 
-
+"""
 @router.post("/", response_model=schemas.Bid)
 def create_bid(
     *,
@@ -35,13 +36,13 @@ def create_bid(
     bid_in: schemas.BidCreate,
     current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
-    """
-    Create new bid.
-    """
+    
+    #Create new bid.
+    
     bid = crud.bid.create_with_owner(db=db, obj_in=bid_in, owner_id=current_user.id)
     return bid
 
-"""
+
 @router.put("/{id}", response_model=schemas.Bid)
 def update_bid(
     *,
@@ -75,7 +76,7 @@ def read_bid(
     bid = crud.bid.get(db=db, id=id)
     if not bid:
         raise HTTPException(status_code=404, detail="Bid not found")
-    if not crud.user.is_superuser(current_user) and (bid.owner_id != current_user.id):
+    if not crud.user.is_superuser(current_user) and (bid.bidder_id != current_user.id):
         raise HTTPException(status_code=400, detail="Not enough permissions")
     return bid
 
@@ -93,7 +94,7 @@ def delete_bid(
     bid = crud.bid.get(db=db, id=id)
     if not bid:
         raise HTTPException(status_code=404, detail="Bid not found")
-    if not crud.user.is_superuser(current_user) and (bid.owner_id != current_user.id):
+    if not crud.user.is_superuser(current_user) and (bid.bidder_id != current_user.id):
         raise HTTPException(status_code=400, detail="Not enough permissions")
     bid = crud.bid.remove(db=db, id=id)
     return bid

@@ -24,7 +24,7 @@ def read_auctions(
     if crud.user.is_superuser(current_user) or status != "draft":
         auctions = crud.auction.get_multi_by_status(db, status=status, skip=skip, limit=limit)
     else:
-        auction = crud.auction.get_multi_by_status(
+        auctions = crud.auction.get_multi_by_status(
             db, status=status, skip=skip, limit=limit)
     return auctions
 
@@ -80,7 +80,7 @@ def read_auction(
     auction = crud.auction.get(db=db, id=id)
     if not auction:
         raise HTTPException(status_code=404, detail="Auction not found")
-    if auction.status == "draft" and (not crud.user.is_superuser(current_user) or (auction.owner_id != current_user.id)):
+    if auction.status == "draft" and not crud.user.is_superuser(current_user) and (auction.owner_id != current_user.id):
         raise HTTPException(status_code=400, detail="Not enough permissions")
     return auction
 
@@ -145,7 +145,7 @@ def update_auction_status(
     return auction
 
 
-@router.get("/{id}/status", response_model=str)
+@router.get("/{id}/status", response_model=object)
 def read_auction_status(
     *,
     db: Session = Depends(deps.get_db),
@@ -160,7 +160,7 @@ def read_auction_status(
         raise HTTPException(status_code=404, detail="Auction not found")
     if auction.status == "draft" and not crud.user.is_superuser(current_user) and (auction.owner_id != current_user.id):
         raise HTTPException(status_code=400, detail="Not enough permissions")
-    return auction.status
+    return {"status": auction.status}
 
 
 ############## Auction's item ##################################

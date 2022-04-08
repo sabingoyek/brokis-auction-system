@@ -7,12 +7,10 @@ from pydantic import BaseModel
 # Shared properties
 class BidBase(BaseModel):
     price: Optional[int] = None
-    item_id: Optional[int] = None
 
 # Properties to receive on Bid creation
 class BidCreate(BidBase):
     price: int
-    item_id: int
 
 # Properties to receive on Bid update
 # Not allowed
