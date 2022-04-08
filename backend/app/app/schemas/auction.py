@@ -16,11 +16,14 @@ class AuctionBase(BaseModel):
 # Properties to receive on Auction creation
 class AuctionCreate(AuctionBase):
     title: str
+    cycle_duration: int = 5  # in minutes
+    max_cycle_number: int = 3
 
 
 # Properties to receive on Auction update
 class AuctionUpdate(AuctionBase):
-    pass
+    cycle_duration: int = 5  # in minutes
+    max_cycle_number: int = 3
 
 
 # Properties shared by models stored in DB

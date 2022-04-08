@@ -16,8 +16,8 @@ class BidCreate(BidBase):
 
 # Properties to receive on Bid update
 # Not allowed
-#class BidUpdate(BidBase):
-#    pass
+class BidUpdate(BidBase):
+    pass
 
 
 # Properties shared by models stored in DB
