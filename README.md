@@ -1,4 +1,4 @@
-# {{cookiecutter.project_name}}
+# Brokis Auction System
 
 ## Backend Requirements
 
