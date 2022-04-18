@@ -1,6 +1,9 @@
-from typing import Optional
+from typing import List, Optional, TYPE_CHECKING
 
 from pydantic import BaseModel, EmailStr
+
+#if TYPE_CHECKING:
+from .auction import Auction
 
 
 # Shared properties
@@ -31,7 +34,7 @@ class UserInDBBase(UserBase):
 
 # Additional properties to return via API
 class User(UserInDBBase):
-    pass
+    auctions: List[Auction] = []
 
 
 # Additional properties stored in DB
